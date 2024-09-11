@@ -17,8 +17,6 @@ import { useActiveId, useJobItem, useJobItems } from '../lib/hooks';
 function App() {
   const [searchText, setSearchText] = useState('');
   const [jobItemsSliced, isLoading] = useJobItems(searchText);
-  const activeId = useActiveId();
-  const jobItem = useJobItem(activeId);
 
   return (
     <>
@@ -43,7 +41,7 @@ function App() {
 
           <PaginationControls />
         </Sidebar>
-        <JobItemContent jobItem={jobItem} />
+        <JobItemContent />
       </Container>
 
       <Footer />
