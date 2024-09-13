@@ -36,31 +36,68 @@ export function useJobItem(id: number | null) {
     }
   );
 
-  const jobItem = data?.jobItem;
-  const isLoading = isInitialLoading;
-  return { jobItem, isLoading } as const;
+  return {
+    jobItem: data?.jobItem,
+    isLoading: isInitialLoading,
+  } as const;
 }
 
+// export function useJobItems(searchText: string) {
+//   const [jobItems, setJobItems] = useState<JobItem[]>([]);
+//   const [isLoading, setIsLoading] = useState(false);
+
+//   useEffect(() => {
+//     if (!searchText) return;
+
+//     const fetchData = async () => {
+//       setIsLoading(true);
+
+//       const res = await fetch(`${BASE_API_URL}?search=${searchText}`);
+//       const data = await res.json();
+//       setIsLoading(false);
+//       setJobItems(data.jobItems);
+//     };
+
+//     fetchData();
+//   }, [searchText]);
+
+//   return [jobItems, isLoading] as const;
+// }
+
+type JobItemsApiResponse = {
+  public: boolean;
+  sorted: boolean;
+  jobItems: JobItem[];
+};
+
+const fetchJobItems = async (
+  searchText: string
+): Promise<JobItemsApiResponse> => {
+  const res = await fetch(`${BASE_API_URL}?search=${searchText}`);
+  const data = await res.json();
+
+  return data;
+};
+
 export function useJobItems(searchText: string) {
-  const [jobItems, setJobItems] = useState<JobItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data, isInitialLoading } = useQuery(
+    ['job-items', searchText],
+    () => fetchJobItems(searchText),
+    {
+      staleTime: 1000 * 60 * 60,
+      refetchOnWindowFocus: false,
+      retry: false,
+      enabled: Boolean(searchText),
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
 
-  useEffect(() => {
-    if (!searchText) return;
-
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      const res = await fetch(`${BASE_API_URL}?search=${searchText}`);
-      const data = await res.json();
-      setIsLoading(false);
-      setJobItems(data.jobItems);
-    };
-
-    fetchData();
-  }, [searchText]);
-
-  return [jobItems, isLoading] as const;
+  return {
+    jobItems: data?.jobItems,
+    isLoading: isInitialLoading,
+  } as const;
 }
 
 export function useActiveId() {
