@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { JobItem, JobItemExpanded } from './types';
 import { BASE_API_URL } from './constants';
 import { useQuery } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
+// Getting single job item ---------------------------------------------
 type JobItemApiResponse = {
   public: boolean;
   jobItem: JobItemExpanded;
@@ -42,27 +44,7 @@ export function useJobItem(id: number | null) {
   } as const;
 }
 
-// export function useJobItems(searchText: string) {
-//   const [jobItems, setJobItems] = useState<JobItem[]>([]);
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   useEffect(() => {
-//     if (!searchText) return;
-
-//     const fetchData = async () => {
-//       setIsLoading(true);
-
-//       const res = await fetch(`${BASE_API_URL}?search=${searchText}`);
-//       const data = await res.json();
-//       setIsLoading(false);
-//       setJobItems(data.jobItems);
-//     };
-
-//     fetchData();
-//   }, [searchText]);
-
-//   return [jobItems, isLoading] as const;
-// }
+// Getting all job items ---------------------------------------------
 
 type JobItemsApiResponse = {
   public: boolean;
@@ -74,8 +56,14 @@ const fetchJobItems = async (
   searchText: string
 ): Promise<JobItemsApiResponse> => {
   const res = await fetch(`${BASE_API_URL}?search=${searchText}`);
-  const data = await res.json();
 
+  // 4xx or 5xx
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.description);
+  }
+
+  const data = await res.json();
   return data;
 };
 
@@ -89,7 +77,7 @@ export function useJobItems(searchText: string) {
       retry: false,
       enabled: Boolean(searchText),
       onError: (error) => {
-        console.log(error);
+        toast.error(error.message);
       },
     }
   );
@@ -99,6 +87,8 @@ export function useJobItems(searchText: string) {
     isLoading: isInitialLoading,
   } as const;
 }
+
+// ---------------------------------------------------------------------
 
 export function useActiveId() {
   const [activeId, setActiveId] = useState<number | null>(null);
