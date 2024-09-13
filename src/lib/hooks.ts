@@ -76,8 +76,18 @@ export function useJobItems(searchText: string) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: Boolean(searchText),
-      onError: (error) => {
-        toast.error(error.message);
+      onError: (error: unknown) => {
+        let message;
+
+        if (error instanceof Error) {
+          message = error.message;
+        } else if (typeof error === 'string') {
+          message = error;
+        } else {
+          message = 'An error occurred.';
+        }
+
+        toast.error(message);
       },
     }
   );
