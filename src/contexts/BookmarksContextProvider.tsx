@@ -1,7 +1,12 @@
 import { createContext } from 'react';
 import { useLocalStorage } from '../lib/hooks';
 
-export const BookmarksContext = createContext(null);
+type BookmarksContext = {
+  bookmarkedIds: number[];
+  handleToggleBookmark: (id: number) => void;
+};
+
+export const BookmarksContext = createContext<BookmarksContext | null>(null);
 
 type BookmarksContextProviderProps = {
   children: React.ReactNode;
