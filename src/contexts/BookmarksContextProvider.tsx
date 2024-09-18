@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { useJobItems, useLocalStorage } from '../lib/hooks';
+import { useJobItems, useLocalStorage, useSearchQuery } from '../lib/hooks';
 
 type BookmarksContext = {
   bookmarkedIds: number[];
