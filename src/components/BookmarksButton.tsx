@@ -6,8 +6,9 @@ export default function BookmarksButton() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const handleClick = (e) => {
+    const handleClick = (e: MouseEvent) => {
       if (
+        e.target instanceof HTMLElement &&
         !e.target.closest('.bookmarks-btn') &&
         !e.target.closest('.bookmarks-popover')
       ) {
