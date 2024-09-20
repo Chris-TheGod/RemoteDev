@@ -30,7 +30,7 @@ function App() {
       <Container>
         <Sidebar>
           <SidebarTop>
-            <ResultsCount totalNumberOfResults={totalNumberOfResults} />
+            <ResultsCount />
             <SortingControls sortBy={sortBy} onClick={handleChangeSortBy} />
           </SidebarTop>
 

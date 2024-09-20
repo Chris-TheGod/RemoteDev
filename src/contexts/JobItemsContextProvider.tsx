@@ -22,7 +22,7 @@ export default function JobItemsContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  // context
+  // dependency on other context
   const { debouncedSearchText } = useSearchTextContext();
 
   // state
