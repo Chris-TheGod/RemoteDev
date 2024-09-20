@@ -5,6 +5,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { handleError } from './utils';
 import { BookmarksContext } from '../contexts/BookmarksContextProvider';
 import { ActiveIdContext } from '../contexts/ActiveIdContextProvider';
+import { SearchTextContext } from '../contexts/SearchTextContextProvider';
 
 // Getting single job item ---------------------------------------------
 type JobItemApiResponse = {
@@ -199,6 +200,17 @@ export function useActiveIdContext() {
   if (!context) {
     throw new Error(
       'useActiveIdContext must be used within ActiveIdContextProvider'
+    );
+  }
+
+  return context;
+}
+
+export function useSearchTextContext() {
+  const context = useContext(SearchTextContext);
+  if (!context) {
+    throw new Error(
+      'useSearchTextContext must be used within SearchTextContextProvider'
     );
   }
 
